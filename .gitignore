@@ -1,0 +1,4 @@
+area/rom
+src/obj/
+log/*.log
+player/
