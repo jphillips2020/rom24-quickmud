@@ -1,0 +1,714 @@
+<title>Exhibit "A" — Section 15, T8S R7E, Bedford Twp, Monroe County, Michigan</title>
+
+<style>
+  :root {
+    --sheet:      #f4f5f0;
+    --ground:     #e8e9e2;
+    --ink:        #1b1f1a;
+    --muted:      #6d746a;
+    --hairline:   #c3c7bc;
+    --blueline:   #3b6ea5;
+    --parcel:     #b8402c;
+    --parcel-fill:#d94a4a;
+    --caution:    #8a6420;
+    --caution-bg: #f0e7d2;
+    --field:      #ffffff;
+
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --mono: ui-monospace, "SFMono-Regular", "Cascadia Mono", Menlo, Consolas, "DejaVu Sans Mono", monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --sheet:      #16202c;
+      --ground:     #101822;
+      --ink:        #cfe0f2;
+      --muted:      #8296ab;
+      --hairline:   #2c3d4f;
+      --blueline:   #7fa8d4;
+      --parcel:     #e07257;
+      --parcel-fill:#e07257;
+      --caution:    #d6ab5c;
+      --caution-bg: #22262a;
+      --field:      #0b121a;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --sheet:      #16202c;
+    --ground:     #101822;
+    --ink:        #cfe0f2;
+    --muted:      #8296ab;
+    --hairline:   #2c3d4f;
+    --blueline:   #7fa8d4;
+    --parcel:     #e07257;
+    --parcel-fill:#e07257;
+    --caution:    #d6ab5c;
+    --caution-bg: #22262a;
+    --field:      #0b121a;
+  }
+
+  :root[data-theme="light"] {
+    --sheet:      #f4f5f0;
+    --ground:     #e8e9e2;
+    --ink:        #1b1f1a;
+    --muted:      #6d746a;
+    --hairline:   #c3c7bc;
+    --blueline:   #3b6ea5;
+    --parcel:     #b8402c;
+    --parcel-fill:#d94a4a;
+    --caution:    #8a6420;
+    --caution-bg: #f0e7d2;
+    --field:      #ffffff;
+  }
+
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.6;
+    margin: 0;
+    padding: clamp(12px, 3vw, 40px);
+  }
+
+  .sheet {
+    max-width: 1080px;
+    margin: 0 auto;
+    background: var(--sheet);
+    border: 1px solid var(--hairline);
+    outline: 4px solid var(--sheet);
+    box-shadow: 0 1px 3px rgb(0 0 0 / .10);
+    padding: clamp(20px, 4vw, 56px);
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  /* ---- title block ---- */
+  .titleblock { display: flex; flex-direction: column; gap: 14px; }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0;
+  }
+
+  h1 {
+    font-family: var(--serif);
+    font-size: clamp(30px, 5vw, 46px);
+    line-height: 1.12;
+    font-weight: 600;
+    text-wrap: balance;
+    margin: 0;
+  }
+
+  .subject {
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--muted);
+    margin: 0;
+  }
+
+  .facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    border: 1px solid var(--hairline);
+    margin-top: 6px;
+  }
+  .fact {
+    flex: 1 1 150px;
+    padding: 12px 16px;
+    border-right: 1px solid var(--hairline);
+  }
+  .fact:last-child { border-right: 0; }
+  .fact dt {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 4px;
+  }
+  .fact dd {
+    font-family: var(--mono);
+    font-size: 19px;
+    font-variant-numeric: tabular-nums;
+    margin: 0;
+  }
+
+  /* ---- generic sections ---- */
+  section { display: flex; flex-direction: column; gap: 16px; }
+
+  h2 {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--muted);
+    margin: 0;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  h3 {
+    font-family: var(--sans);
+    font-size: 15px;
+    font-weight: 650;
+    margin: 0;
+  }
+
+  p { margin: 0; max-width: 68ch; }
+
+  /* ---- the deed ---- */
+  .deed {
+    font-family: var(--serif);
+    font-size: 17px;
+    line-height: 1.62;
+    margin: 0;
+    padding: 4px 0 4px 22px;
+    border-left: 2px solid var(--blueline);
+    max-width: 66ch;
+  }
+  .deed b { font-weight: 600; }
+
+  /* ---- caution ---- */
+  .caution {
+    border: 1px solid var(--caution);
+    background: var(--caution-bg);
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .caution .eyebrow { color: var(--caution); }
+  .caution p { font-size: 15px; }
+
+  /* ---- plat + data ---- */
+  .plate {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 36px;
+    align-items: start;
+  }
+  @media (max-width: 800px) {
+    .plate { grid-template-columns: minmax(0, 1fr); }
+  }
+
+  #plat { width: 100%; height: auto; display: block; }
+
+  .datacol { display: flex; flex-direction: column; gap: 24px; }
+
+  .tablewrap { overflow-x: auto; }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    font-variant-numeric: tabular-nums;
+  }
+  th, td {
+    text-align: right;
+    padding: 7px 10px;
+    border-bottom: 1px solid var(--hairline);
+    white-space: nowrap;
+  }
+  th {
+    font-size: 10px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 600;
+    border-bottom: 1px solid var(--ink);
+  }
+  th:first-child, td:first-child { text-align: left; }
+  tbody tr:last-child td { border-bottom: 0; }
+  .corner-tag { color: var(--parcel); }
+
+  /* ---- re-anchor tool ---- */
+  .tool {
+    border: 1px solid var(--hairline);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    background: var(--ground);
+  }
+  .fields { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-end; }
+  .field { display: flex; flex-direction: column; gap: 5px; }
+  .field label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .field input {
+    font-family: var(--mono);
+    font-size: 14px;
+    padding: 8px 10px;
+    width: 160px;
+    color: var(--ink);
+    background: var(--field);
+    border: 1px solid var(--hairline);
+    border-radius: 0;
+  }
+  .field input:focus-visible,
+  button:focus-visible,
+  a:focus-visible {
+    outline: 2px solid var(--blueline);
+    outline-offset: 2px;
+  }
+
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; }
+
+  button, .linkbtn {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: .06em;
+    padding: 9px 15px;
+    border: 1px solid var(--ink);
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    border-radius: 0;
+  }
+  button:hover, .linkbtn:hover { background: var(--ink); color: var(--sheet); }
+  button.reset { border-color: var(--hairline); color: var(--muted); }
+  button.reset:hover { background: var(--hairline); color: var(--ink); }
+
+  .status {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+    min-height: 1.2em;
+    margin: 0;
+  }
+
+  /* ---- derivation + import ---- */
+  .cols {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 28px;
+  }
+  .cols p { font-size: 15px; }
+
+  ol.steps { margin: 0; padding-left: 1.3em; display: flex; flex-direction: column; gap: 10px; }
+  ol.steps li { font-size: 15px; max-width: 60ch; }
+
+  code {
+    font-family: var(--mono);
+    font-size: .88em;
+    background: var(--ground);
+    border: 1px solid var(--hairline);
+    padding: 1px 5px;
+  }
+  .tool code { background: var(--sheet); }
+
+  a { color: var(--blueline); }
+
+  footer {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    border-top: 1px solid var(--hairline);
+    padding-top: 16px;
+    line-height: 1.8;
+  }
+
+  /* ---- plat drawing internals (scoped, prefixed to avoid collisions) ---- */
+  #plat .plat-sheet   { fill: var(--sheet); }
+  #plat .plat-poly    { fill: var(--parcel-fill); fill-opacity: .15; stroke: var(--parcel); stroke-width: 2.5; }
+  #plat .plat-dim     { font: 15px var(--sans); fill: var(--ink); }
+  #plat .plat-mono    { font: 13px var(--mono); fill: var(--muted); }
+  #plat .plat-secline { stroke: var(--blueline); stroke-width: 1.8; stroke-dasharray: 10 6; fill: none; }
+  #plat .plat-tie     { stroke: var(--parcel); stroke-width: 1.2; stroke-dasharray: 3 3; fill: none; }
+  #plat .plat-dot-q   { fill: var(--ink); }
+  #plat .plat-dot-p   { fill: var(--parcel); }
+  #plat .plat-bar     { stroke: var(--ink); stroke-width: 2; }
+  #plat .plat-arrow   { fill: var(--ink); }
+</style>
+
+<div class="sheet">
+
+  <header class="titleblock">
+    <p class="eyebrow">Metes &amp; bounds plot &middot; Michigan Meridian PLSS</p>
+    <h1>Exhibit &ldquo;A&rdquo;</h1>
+    <p class="subject">
+      Part of the NW 1/4, Section 15, Town 8 South, Range 7 East<br>
+      Bedford Township, Monroe County, Michigan
+    </p>
+    <dl class="facts">
+      <div class="fact"><dt>Area</dt><dd>0.9149 ac</dd></div>
+      <div class="fact"><dt>Square feet</dt><dd>39,852</dd></div>
+      <div class="fact"><dt>Perimeter</dt><dd>818.81 ft</dd></div>
+      <div class="fact"><dt>Closure error</dt><dd>0.0085 ft</dd></div>
+    </dl>
+  </header>
+
+  <section>
+    <h2>The description</h2>
+    <p class="deed">
+      Land situated in the Township of Bedford, County of Monroe, State of
+      Michigan, described as: That part of the Northwest quarter of Section 15,
+      Town 8 South, Range 7 East, Bedford Township, Monroe County, Michigan,
+      described as follows: Commencing at a point <b>7.7 feet South 89 degrees
+      58 minutes 30 seconds West from the North one quarter corner of said
+      Section 15</b>; thence South 89 degrees 58 minutes 30 seconds West 157.98
+      feet; thence South 0 degrees 40 minutes West 249.95 feet; thence due East
+      160.88 feet; thence due North 250.00 feet to the Point of Beginning.
+    </p>
+    <p>
+      The point the description commences at <em>is</em> the Point of Beginning:
+      running all four calls from it returns to within 0.0085 ft, so the deed
+      closes essentially perfectly. It is a four-sided parcel, very slightly out
+      of square &mdash; the west line leans 0&deg;40&prime; west of south, which
+      makes the south line 2.90 ft longer than the north line.
+    </p>
+  </section>
+
+  <section class="caution">
+    <p class="eyebrow">Position is an estimate</p>
+    <p>
+      The <b>shape and dimensions are exact</b> &mdash; they come straight out of
+      the deed. The <b>absolute position does not</b>: it hangs entirely off the
+      coordinate of the North 1/4 corner of Section 15, which had to be
+      reconstructed from published PLSS township geometry because no survey or
+      parcel service was reachable. Treat it as accurate to roughly
+      <b>&plusmn;0.3&nbsp;mile</b>, mostly in latitude &mdash; good enough to find
+      the parcel, nowhere near good enough for anything legal. Use the tool below
+      to drop in the real corner once you have it.
+    </p>
+  </section>
+
+  <section>
+    <h2>Plat</h2>
+    <div class="plate">
+      <svg id="plat" viewBox="0 0 660 760" role="img"
+           aria-label="Scaled plat drawing of the Exhibit A parcel, 157.98 feet of frontage on the north line of Section 15 and 250 feet deep.">
+        <rect class="plat-sheet" x="0" y="0" width="660" height="760"/>
+
+        <line class="plat-secline" x1="26" y1="130" x2="634" y2="130"/>
+        <text class="plat-mono" x="26" y="120">north line of Sec. 15 &mdash; Erie Rd</text>
+
+        <polygon class="plat-poly" points="497.51,130.01 156.28,130.16 150.00,670.00 497.49,670.00"/>
+
+        <text class="plat-dim" x="326.90" y="152.08" text-anchor="middle">S 89&deg;58&prime;30&Prime; W  157.98&prime;</text>
+        <text class="plat-dim" x="147.14" y="400.08" text-anchor="middle" transform="rotate(-90 147.14 400.08)">S 00&deg;40&prime;00&Prime; W  249.95&prime;</text>
+        <text class="plat-dim" x="323.75" y="694.00" text-anchor="middle">Due East  160.88&prime;</text>
+        <text class="plat-dim" x="503.50" y="400.00" text-anchor="middle" transform="rotate(90 503.50 400.00)">Due North  250.00&prime;</text>
+
+        <line class="plat-tie" x1="497.51" y1="130.01" x2="514.14" y2="130"/>
+        <circle class="plat-dot-q" cx="514.14" cy="130" r="5"/>
+        <text class="plat-mono" x="525.14" y="150">N 1/4 cor.</text>
+        <text class="plat-mono" x="525.14" y="164">Sec. 15</text>
+        <circle class="plat-dot-p" cx="497.51" cy="130.01" r="5"/>
+        <text class="plat-mono" x="485.51" y="118.01" text-anchor="end">P.O.B.</text>
+        <text class="plat-mono" x="485.51" y="104.01" text-anchor="end">7.7&prime; W of N 1/4 cor.</text>
+
+        <g transform="translate(604,668)">
+          <path class="plat-arrow" d="M0,-28 L8,9 L0,2 L-8,9 Z"/>
+          <text class="plat-mono" x="0" y="26" text-anchor="middle">N</text>
+        </g>
+        <g transform="translate(150,720)">
+          <line class="plat-bar" x1="0" y1="0" x2="216" y2="0"/>
+          <line class="plat-bar" x1="0" y1="-5" x2="0" y2="5"/>
+          <line class="plat-bar" x1="216" y1="-5" x2="216" y2="5"/>
+          <text class="plat-mono" x="108" y="18" text-anchor="middle">100 feet</text>
+        </g>
+      </svg>
+
+      <div class="datacol">
+        <div>
+          <h3>Corners</h3>
+          <p class="status" id="anchorNote"></p>
+        </div>
+        <div class="tablewrap">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Corner</th>
+                <th scope="col">&Delta;N ft</th>
+                <th scope="col">&Delta;E ft</th>
+                <th scope="col">Latitude</th>
+                <th scope="col">Longitude</th>
+              </tr>
+            </thead>
+            <tbody id="cornerRows"></tbody>
+          </table>
+        </div>
+        <p style="font-size:14px;color:var(--muted)">
+          &Delta;N and &Delta;E are offsets from the North 1/4 corner of Section 15,
+          in feet. The parcel's north line is coincident with the north line of
+          the section, so it fronts on Erie Road; the 7.7 ft tie puts its east
+          line essentially on the section's north&ndash;south quarter line.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Re-anchor and export</h2>
+    <p>
+      Everything is parameterised on one coordinate. Get the true North 1/4
+      corner from Monroe County GIS, the Michigan Remonumentation records, a
+      surveyor, or by right-clicking the spot in Google Maps &mdash; paste it in
+      and the whole parcel moves with it.
+    </p>
+    <div class="tool">
+      <div class="fields">
+        <div class="field">
+          <label for="lat">Corner latitude</label>
+          <input id="lat" type="text" inputmode="decimal" value="41.79309">
+        </div>
+        <div class="field">
+          <label for="lon">Corner longitude</label>
+          <input id="lon" type="text" inputmode="decimal" value="-83.57760">
+        </div>
+        <button type="button" class="reset" id="resetBtn">Reset to estimate</button>
+      </div>
+      <div class="actions">
+        <button type="button" id="kmlBtn">Download KML</button>
+        <button type="button" id="geojsonBtn">Download GeoJSON</button>
+        <a class="linkbtn" id="mapsLink" href="#" target="_blank" rel="noopener">Open corner in Google Maps</a>
+      </div>
+      <p class="status" id="status">
+        KML imports into Google Earth and Google My Maps. GeoJSON opens in
+        geojson.io, QGIS, Leaflet and Mapbox. Coordinates are WGS84.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <h2>How the corner was located</h2>
+    <div class="cols">
+      <div>
+        <h3>Longitude</h3>
+        <p>
+          Ida Township (T7S R7E) and Bedford Township (T8S R7E) both publish a
+          centroid longitude of 83&deg;35&prime;19&Prime;W. Same range, so that is
+          the range's centre line &mdash; the section line 3 miles east of its west
+          boundary, which is the Section 15/16 line, Jackman Road. The geocode of
+          the Bedford Township Government Center at 8100 Jackman Rd
+          (&minus;83.5861) agrees, and Temperance's CDP centroid falls one mile
+          further east on Lewis Ave. Section 15 therefore runs Jackman to Lewis,
+          and its North 1/4 corner is the midpoint of that mile.
+        </p>
+      </div>
+      <div>
+        <h3>Latitude</h3>
+        <p>
+          Ida Township is a regular 36 sq mi township, so its published centroid
+          fixes the T7S/T8S line at 41.82208. Section 15 sits in the third tier of
+          sections from the north, putting its north line 2 miles south of that.
+        </p>
+        <h3 style="margin-top:16px">Corroboration</h3>
+        <p>
+          A listing at 1573 W Erie Rd carries the legal description &ldquo;SEC 15,
+          T8S R7E, COM AT THE NW COR OF THE NW 1/4 SEC 15&rdquo;, confirming Erie
+          Road runs along the north line of Section 15.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Importing</h2>
+    <ol class="steps">
+      <li><b>Google Earth</b> &mdash; <code>earth.google.com/web</code> &rarr; Projects &rarr; Import KML file. Best for checking the fit against aerial imagery.</li>
+      <li><b>Google My Maps</b> &mdash; <code>mymaps.google.com</code> &rarr; Create a new map &rarr; Import &rarr; upload the KML.</li>
+      <li><b>geojson.io</b> &mdash; Open &rarr; the GeoJSON file. Fastest way to eyeball it.</li>
+      <li><b>QGIS or ArcGIS</b> &mdash; open either file directly.</li>
+    </ol>
+  </section>
+
+  <footer>
+    Bearings treated as true north. Distances are horizontal ground distances in
+    US survey feet. Datum WGS84 / EPSG:4326.<br>
+    Shape and area computed from the deed and exact; absolute position estimated
+    &plusmn;0.3 mi and not suitable for legal, boundary or construction use.
+  </footer>
+
+</div>
+
+<script>
+  (function () {
+    "use strict";
+
+    var DEFAULT = { lat: 41.79309, lon: -83.57760 };
+
+    // Deed calls: [azimuth degrees clockwise from north, distance in feet]
+    var TIE   = [269.975, 7.7];
+    var CALLS = [
+      [269.975,          157.98],
+      [180.6666666667,   249.95],
+      [ 90,              160.88],
+      [  0,              250.00]
+    ];
+    var NAMES = ["NE (P.O.B.)", "NW", "SW", "SE"];
+
+    var FT_PER_M = 1 / 0.3048;
+    var A = 6378137.0, F = 1 / 298.257223563, E2 = F * (2 - F);
+
+    function leg(call) {
+      var az = call[0] * Math.PI / 180;
+      return { n: call[1] * Math.cos(az), e: call[1] * Math.sin(az) };
+    }
+
+    // Corner offsets from the North 1/4 corner, in feet.
+    function offsets() {
+      var t = leg(TIE);                       // quarter corner -> P.O.B.
+      var n = t.n, e = t.e;                   // start at the P.O.B.
+      var pts = [{ n: n, e: e }];
+      for (var i = 0; i < CALLS.length - 1; i++) {
+        var d = leg(CALLS[i]);
+        n += d.n; e += d.e;
+        pts.push({ n: n, e: e });
+      }
+      return pts;
+    }
+
+    function toLatLon(lat0, lon0, northFt, eastFt) {
+      var phi = lat0 * Math.PI / 180;
+      var w = Math.sqrt(1 - E2 * Math.sin(phi) * Math.sin(phi));
+      var rM = A * (1 - E2) / (w * w * w);
+      var rN = A / w;
+      var dLat = (northFt / FT_PER_M) / rM;
+      var dLon = (eastFt / FT_PER_M) / (rN * Math.cos(phi));
+      return [lat0 + dLat * 180 / Math.PI, lon0 + dLon * 180 / Math.PI];
+    }
+
+    var latEl = document.getElementById("lat");
+    var lonEl = document.getElementById("lon");
+    var rowsEl = document.getElementById("cornerRows");
+    var noteEl = document.getElementById("anchorNote");
+    var mapsEl = document.getElementById("mapsLink");
+    var statusEl = document.getElementById("status");
+
+    var current = null;
+
+    function anchor() {
+      var lat = parseFloat(latEl.value);
+      var lon = parseFloat(lonEl.value);
+      if (!isFinite(lat) || !isFinite(lon) || lat < -90 || lat > 90 || lon < -180 || lon > 180) {
+        return null;
+      }
+      return { lat: lat, lon: lon };
+    }
+
+    function render() {
+      var a = anchor();
+      if (!a) {
+        noteEl.textContent = "Enter a latitude between −90 and 90 and a longitude between −180 and 180.";
+        return;
+      }
+
+      var pts = offsets();
+      var rows = "";
+      var ring = [];
+
+      pts.forEach(function (p, i) {
+        var ll = toLatLon(a.lat, a.lon, p.n, p.e);
+        ring.push([ll[1], ll[0]]);
+        rows += "<tr>"
+          + '<td class="corner-tag">' + NAMES[i] + "</td>"
+          + "<td>" + p.n.toFixed(2) + "</td>"
+          + "<td>" + p.e.toFixed(2) + "</td>"
+          + "<td>" + ll[0].toFixed(6) + "</td>"
+          + "<td>" + ll[1].toFixed(6) + "</td>"
+          + "</tr>";
+      });
+      rowsEl.innerHTML = rows;
+
+      var isDefault = Math.abs(a.lat - DEFAULT.lat) < 1e-9 && Math.abs(a.lon - DEFAULT.lon) < 1e-9;
+      noteEl.textContent = "N 1/4 cor. Sec. 15 — " + a.lat.toFixed(6) + ", " + a.lon.toFixed(6)
+        + (isDefault ? "  (estimated)" : "  (custom anchor)");
+
+      ring.push(ring[0]);
+      current = { anchor: a, ring: ring, pob: ring[0] };
+
+      mapsEl.href = "https://www.google.com/maps/search/?api=1&query="
+        + a.lat.toFixed(7) + "," + a.lon.toFixed(7);
+    }
+
+    function kml() {
+      var coords = current.ring.map(function (c) {
+        return c[0].toFixed(8) + "," + c[1].toFixed(8) + ",0";
+      }).join("\n              ");
+      return '<?xml version="1.0" encoding="UTF-8"?>\n'
+        + '<kml xmlns="http://www.opengis.net/kml/2.2">\n  <Document>\n'
+        + "    <name>Exhibit A — Sec 15, T8S R7E, Bedford Twp, Monroe Co, MI</name>\n"
+        + '    <Style id="parcel"><LineStyle><color>ff0000ff</color><width>3</width></LineStyle>'
+        + "<PolyStyle><color>4d0000ff</color></PolyStyle></Style>\n"
+        + "    <Placemark>\n      <name>Exhibit A parcel (0.915 acres)</name>\n"
+        + "      <styleUrl>#parcel</styleUrl>\n      <Polygon><tessellate>1</tessellate>\n"
+        + "        <outerBoundaryIs><LinearRing><coordinates>\n              "
+        + coords + "\n        </coordinates></LinearRing></outerBoundaryIs>\n"
+        + "      </Polygon>\n    </Placemark>\n"
+        + "    <Placemark>\n      <name>North 1/4 corner, Section 15 (anchor)</name>\n"
+        + "      <Point><coordinates>" + current.anchor.lon.toFixed(8) + ","
+        + current.anchor.lat.toFixed(8) + ",0</coordinates></Point>\n    </Placemark>\n"
+        + "  </Document>\n</kml>\n";
+    }
+
+    function geojson() {
+      return JSON.stringify({
+        type: "FeatureCollection",
+        features: [
+          {
+            type: "Feature",
+            properties: { name: "Exhibit A parcel", area_acres: 0.9149 },
+            geometry: { type: "Polygon", coordinates: [current.ring] }
+          },
+          {
+            type: "Feature",
+            properties: { name: "North 1/4 corner, Section 15 (anchor)" },
+            geometry: { type: "Point", coordinates: [current.anchor.lon, current.anchor.lat] }
+          }
+        ]
+      }, null, 2);
+    }
+
+    function download(name, mime, text) {
+      if (!current) { return; }
+      var blob = new Blob([text], { type: mime });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = name;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+      statusEl.textContent = "Saved " + name + " anchored at "
+        + current.anchor.lat.toFixed(6) + ", " + current.anchor.lon.toFixed(6) + ".";
+    }
+
+    latEl.addEventListener("input", render);
+    lonEl.addEventListener("input", render);
+
+    document.getElementById("resetBtn").addEventListener("click", function () {
+      latEl.value = DEFAULT.lat.toFixed(5);
+      lonEl.value = DEFAULT.lon.toFixed(5);
+      render();
+    });
+    document.getElementById("kmlBtn").addEventListener("click", function () {
+      download("exhibit-a-parcel.kml", "application/vnd.google-earth.kml+xml", kml());
+    });
+    document.getElementById("geojsonBtn").addEventListener("click", function () {
+      download("exhibit-a-parcel.geojson", "application/geo+json", geojson());
+    });
+
+    render();
+  })();
+</script>

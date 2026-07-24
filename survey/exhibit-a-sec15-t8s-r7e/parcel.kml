@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>Exhibit &#8220;A&#8221; &#8212; Sec 15, T8S R7E, Bedford Twp, Monroe Co, MI</name>
+    <description>Exhibit “A” — part of the NW 1/4 of Section 15, T8S R7E, Bedford Township, Monroe County, Michigan. Shape and dimensions are exact per the deed; absolute position depends on the Section 15 North 1/4 corner coordinate used as the anchor.</description>
+    <Style id="parcel">
+      <LineStyle><color>ff0000ff</color><width>3</width></LineStyle>
+      <PolyStyle><color>4d0000ff</color></PolyStyle>
+    </Style>
+    <Placemark>
+      <name>Exhibit &#8220;A&#8221; parcel (0.915 acres)</name>
+      <styleUrl>#parcel</styleUrl>
+      <Polygon>
+        <tessellate>1</tessellate>
+        <outerBoundaryIs><LinearRing><coordinates>
+              -83.57762824,41.79308999,0
+              -83.57820756,41.79308980,0
+              -83.57821822,41.79240393,0
+              -83.57762827,41.79240393,0
+              -83.57762824,41.79308999,0
+        </coordinates></LinearRing></outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+    <Placemark>
+      <name>Point of Beginning</name>
+      <Point><coordinates>-83.57762824,41.79308999,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>North 1/4 corner, Section 15 (anchor)</name>
+      <Point><coordinates>-83.57760000,41.79309000,0</coordinates></Point>
+    </Placemark>
+  </Document>
+</kml>

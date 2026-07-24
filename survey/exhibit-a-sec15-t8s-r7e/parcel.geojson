@@ -1,0 +1,66 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Exhibit \u201cA\u201d parcel",
+        "area_acres": 0.9149,
+        "description": "Exhibit \u201cA\u201d \u2014 part of the NW 1/4 of Section 15, T8S R7E, Bedford Township, Monroe County, Michigan. Shape and dimensions are exact per the deed; absolute position depends on the Section 15 North 1/4 corner coordinate used as the anchor."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -83.57762823627114,
+              41.79308999078004
+            ],
+            [
+              -83.57820755654554,
+              41.793089801615146
+            ],
+            [
+              -83.57821822118332,
+              41.79240392689359
+            ],
+            [
+              -83.57762826641299,
+              41.79240392689359
+            ],
+            [
+              -83.57762823627114,
+              41.79308999078004
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Point of Beginning"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.57762823627114,
+          41.79308999078004
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "North 1/4 corner, Section 15 (anchor)"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.5776,
+          41.79309
+        ]
+      }
+    }
+  ]
+}
