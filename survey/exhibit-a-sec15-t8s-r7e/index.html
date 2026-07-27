@@ -295,7 +295,27 @@
     outline-offset: 2px;
   }
 
-  .actions { display: flex; flex-wrap: wrap; gap: 10px; }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .actions-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    min-width: 108px;
+  }
+
+  .offset {
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.6;
+    margin: 0;
+    padding: 12px 14px;
+    border-left: 3px solid var(--blueline);
+    background: var(--sheet);
+  }
+  .offset:empty { display: none; }
+  .offset b { color: var(--parcel); }
 
   button, .linkbtn {
     font-family: var(--mono);
@@ -523,11 +543,21 @@
         P.O.B. is the parcel corner nearest the road on the east side; the
         section corner sits 7.7 ft east of it.
       </p>
+      <p class="offset" id="offset"></p>
+
       <div class="actions">
+        <span class="actions-label">See this corner in</span>
+        <a class="linkbtn" id="gmapsLink" href="#" target="_blank" rel="noopener">Google Maps</a>
+        <a class="linkbtn" id="gearthLink" href="#" target="_blank" rel="noopener">Google Earth</a>
+        <a class="linkbtn" id="osmLink" href="#" target="_blank" rel="noopener">OpenStreetMap</a>
+      </div>
+
+      <div class="actions">
+        <span class="actions-label">Export</span>
         <button type="button" id="kmlBtn">Download KML</button>
         <button type="button" id="geojsonBtn">Download GeoJSON</button>
-        <a class="linkbtn" id="mapsLink" href="#" target="_blank" rel="noopener">Open corner in Google Maps</a>
       </div>
+
       <p class="status" id="status">
         KML imports into Google Earth and Google My Maps. GeoJSON opens in
         geojson.io, QGIS, Leaflet and Mapbox. Coordinates are WGS84.
@@ -639,8 +669,29 @@
     var lonEl = document.getElementById("lon");
     var rowsEl = document.getElementById("cornerRows");
     var noteEl = document.getElementById("anchorNote");
-    var mapsEl = document.getElementById("mapsLink");
     var statusEl = document.getElementById("status");
+    var offsetEl = document.getElementById("offset");
+    var gmapsEl = document.getElementById("gmapsLink");
+    var gearthEl = document.getElementById("gearthLink");
+    var osmEl = document.getElementById("osmLink");
+
+    // How far apart two points are, as north/east feet plus a compass bearing.
+    function separation(from, to) {
+      var phi = from.lat * Math.PI / 180;
+      var w = Math.sqrt(1 - E2 * Math.sin(phi) * Math.sin(phi));
+      var rM = A * (1 - E2) / (w * w * w);
+      var rN = A / w;
+      var n = (to.lat - from.lat) * Math.PI / 180 * rM * FT_PER_M;
+      var e = (to.lon - from.lon) * Math.PI / 180 * rN * Math.cos(phi) * FT_PER_M;
+      var brg = (Math.atan2(e, n) * 180 / Math.PI + 360) % 360;
+      var dirs = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE",
+                  "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
+      return {
+        n: n, e: e,
+        dist: Math.sqrt(n * n + e * e),
+        compass: dirs[Math.round(brg / 22.5) % 16]
+      };
+    }
 
     var current = null;
 
@@ -699,8 +750,30 @@
       ring.push(ring[0]);
       current = { anchor: a, ring: ring, pob: ring[0] };
 
-      mapsEl.href = "https://www.google.com/maps/search/?api=1&query="
-        + a.lat.toFixed(7) + "," + a.lon.toFixed(7);
+      // Point the map links at the P.O.B. -- that is the parcel corner you can
+      // actually pick out on imagery, not the invisible section monument.
+      var pob = { lat: current.pob[1], lon: current.pob[0] };
+      var ll = pob.lat.toFixed(7) + "," + pob.lon.toFixed(7);
+      gmapsEl.href = "https://www.google.com/maps/search/?api=1&query=" + ll;
+      gearthEl.href = "https://earth.google.com/web/@" + ll + ",190a,450d,35y,0h,0t,0r";
+      osmEl.href = "https://www.openstreetmap.org/?mlat=" + pob.lat.toFixed(7)
+        + "&mlon=" + pob.lon.toFixed(7) + "#map=19/" + pob.lat.toFixed(6)
+        + "/" + pob.lon.toFixed(6);
+
+      if (isDefault) {
+        offsetEl.innerHTML = "This is the built-in reconstruction, which is "
+          + "<b>known to be wrong by a few hundred feet</b>. Open it in one of the "
+          + "maps below to see where it landed, then enter the parcel's real "
+          + "road-side east corner above.";
+      } else {
+        var estPob = toLatLon(DEFAULT.lat, DEFAULT.lon, offsets()[0].n, offsets()[0].e);
+        var s = separation({ lat: estPob[0], lon: estPob[1] }, pob);
+        offsetEl.innerHTML = "Your corner is <b>" + Math.round(s.dist)
+          + " ft " + s.compass + "</b> of the built-in estimate &mdash; "
+          + Math.abs(Math.round(s.n)) + " ft " + (s.n >= 0 ? "north" : "south")
+          + ", " + Math.abs(Math.round(s.e)) + " ft " + (s.e >= 0 ? "east" : "west")
+          + ". That is how far off the reconstruction was.";
+      }
     }
 
     function kml() {
