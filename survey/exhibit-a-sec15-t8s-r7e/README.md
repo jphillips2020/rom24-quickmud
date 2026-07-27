@@ -72,21 +72,28 @@ of sections from the north, so its north line is 2 miles south of it.
 
 Resulting anchor: **41.79309, −83.57760**
 
-Realistic uncertainty is roughly **±0.3 mile**, mostly in latitude. That is fine
-for finding the parcel, and nowhere near good enough for anything legal.
+**This anchor is known to be wrong.** Checked against aerial imagery in Google
+Earth it puts the parcel roughly three lots away, on golf course ground — an
+error on the order of a few hundred feet. It confirms the right stretch of Erie
+Road and nothing finer. Correct it before using any coordinate from here.
 
 ### Re-anchoring
 
 Everything is parameterised on that one coordinate, so correcting it is a
 one-liner. Get the true corner from Monroe County GIS, the Michigan
 Remonumentation records, a surveyor, or by right-clicking the spot in Google
-Maps, then:
+Earth or Google Maps, then:
 
 ```sh
 python3 plot_parcel.py --anchor 41.7930500,-83.5779000
 ```
 
 All three output files are rewritten in place against the new corner.
+
+`index.html` does the same thing interactively, and will also take the parcel's
+road-side east corner (the P.O.B.) instead of the section corner — that is the
+point you can actually identify on imagery. It sits 7.7 ft west of the section
+corner, and the page converts between the two.
 
 ## Importing
 

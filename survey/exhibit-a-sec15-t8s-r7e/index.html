@@ -242,6 +242,33 @@
     gap: 16px;
     background: var(--ground);
   }
+  .modes {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 22px;
+  }
+  .modes legend {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 0;
+    margin-bottom: 8px;
+  }
+  .modes label {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .modes input { accent-color: var(--blueline); margin: 0; }
+  .modes input:focus-visible { outline: 2px solid var(--blueline); outline-offset: 2px; }
+
   .fields { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-end; }
   .field { display: flex; flex-direction: column; gap: 5px; }
   .field label {
@@ -378,16 +405,20 @@
   </section>
 
   <section class="caution">
-    <p class="eyebrow">Position is an estimate</p>
+    <p class="eyebrow">The built-in anchor is known to be wrong</p>
     <p>
       The <b>shape and dimensions are exact</b> &mdash; they come straight out of
-      the deed. The <b>absolute position does not</b>: it hangs entirely off the
+      the deed. The <b>absolute position is not</b>: it hangs entirely off the
       coordinate of the North 1/4 corner of Section 15, which had to be
       reconstructed from published PLSS township geometry because no survey or
-      parcel service was reachable. Treat it as accurate to roughly
-      <b>&plusmn;0.3&nbsp;mile</b>, mostly in latitude &mdash; good enough to find
-      the parcel, nowhere near good enough for anything legal. Use the tool below
-      to drop in the real corner once you have it.
+      parcel service was reachable.
+    </p>
+    <p>
+      Checked against aerial imagery, that reconstruction lands the parcel
+      <b>roughly three lots away, on golf course ground</b> &mdash; an error on the
+      order of a few hundred feet. Close enough to confirm the right stretch of
+      Erie Road, not close enough to be the parcel. <b>Correct it below</b> before
+      using any coordinate here for anything.
     </p>
   </section>
 
@@ -460,23 +491,38 @@
   <section>
     <h2>Re-anchor and export</h2>
     <p>
-      Everything is parameterised on one coordinate. Get the true North 1/4
-      corner from Monroe County GIS, the Michigan Remonumentation records, a
-      surveyor, or by right-clicking the spot in Google Maps &mdash; paste it in
-      and the whole parcel moves with it.
+      Everything is parameterised on one coordinate, so one good point fixes the
+      whole plot. Easiest is to find the parcel on imagery and read off its
+      <b>road-side east corner</b> &mdash; the parcel's north line runs along Erie
+      Road and its east line sits on the section's quarter line, 7.7 ft west of
+      the section corner. If you have the surveyed section corner itself, switch
+      the mode and enter that instead.
     </p>
     <div class="tool">
+      <fieldset class="modes">
+        <legend>The point I'm entering is&hellip;</legend>
+        <label><input type="radio" name="mode" value="pob" checked>
+          the parcel's <b>road-side east corner</b> (P.O.B.)</label>
+        <label><input type="radio" name="mode" value="qc">
+          the <b>North 1/4 corner</b> of Section 15</label>
+      </fieldset>
       <div class="fields">
         <div class="field">
-          <label for="lat">Corner latitude</label>
-          <input id="lat" type="text" inputmode="decimal" value="41.79309">
+          <label for="lat" id="latLabel">Latitude</label>
+          <input id="lat" type="text" inputmode="decimal" value="41.793090">
         </div>
         <div class="field">
-          <label for="lon">Corner longitude</label>
-          <input id="lon" type="text" inputmode="decimal" value="-83.57760">
+          <label for="lon" id="lonLabel">Longitude</label>
+          <input id="lon" type="text" inputmode="decimal" value="-83.577628">
         </div>
         <button type="button" class="reset" id="resetBtn">Reset to estimate</button>
       </div>
+      <p class="status">
+        In Google Earth, right-click the spot &rarr; <b>Copy coordinates</b>. In
+        Google Maps, right-click &rarr; click the lat/lon at the top to copy. The
+        P.O.B. is the parcel corner nearest the road on the east side; the
+        section corner sits 7.7 ft east of it.
+      </p>
       <div class="actions">
         <button type="button" id="kmlBtn">Download KML</button>
         <button type="button" id="geojsonBtn">Download GeoJSON</button>
@@ -535,8 +581,9 @@
   <footer>
     Bearings treated as true north. Distances are horizontal ground distances in
     US survey feet. Datum WGS84 / EPSG:4326.<br>
-    Shape and area computed from the deed and exact; absolute position estimated
-    &plusmn;0.3 mi and not suitable for legal, boundary or construction use.
+    Shape and area computed from the deed and exact; the built-in anchor is a
+    reconstruction, confirmed off by a few hundred feet, and nothing here is
+    suitable for legal, boundary or construction use.
   </footer>
 
 </div>
@@ -597,13 +644,28 @@
 
     var current = null;
 
-    function anchor() {
+    function mode() {
+      return document.querySelector('input[name="mode"]:checked').value;
+    }
+
+    function entered() {
       var lat = parseFloat(latEl.value);
       var lon = parseFloat(lonEl.value);
       if (!isFinite(lat) || !isFinite(lon) || lat < -90 || lat > 90 || lon < -180 || lon > 180) {
         return null;
       }
       return { lat: lat, lon: lon };
+    }
+
+    // The section corner, whichever point the user typed in.  The P.O.B. lies
+    // 7.7 ft from it on a bearing of S 89°58'30" W, so going back is the reverse.
+    function anchor() {
+      var p = entered();
+      if (!p) { return null; }
+      if (mode() === "qc") { return p; }
+      var t = leg(TIE);
+      var ll = toLatLon(p.lat, p.lon, -t.n, -t.e);
+      return { lat: ll[0], lon: ll[1] };
     }
 
     function render() {
@@ -630,7 +692,7 @@
       });
       rowsEl.innerHTML = rows;
 
-      var isDefault = Math.abs(a.lat - DEFAULT.lat) < 1e-9 && Math.abs(a.lon - DEFAULT.lon) < 1e-9;
+      var isDefault = Math.abs(a.lat - DEFAULT.lat) < 1e-6 && Math.abs(a.lon - DEFAULT.lon) < 1e-6;
       noteEl.textContent = "N 1/4 cor. Sec. 15 — " + a.lat.toFixed(6) + ", " + a.lon.toFixed(6)
         + (isDefault ? "  (estimated)" : "  (custom anchor)");
 
@@ -694,12 +756,34 @@
         + current.anchor.lat.toFixed(6) + ", " + current.anchor.lon.toFixed(6) + ".";
     }
 
+    // Write the anchor into the fields in whichever form the mode calls for.
+    function setFields(a) {
+      var p = a;
+      if (mode() !== "qc") {
+        var t = leg(TIE);
+        var ll = toLatLon(a.lat, a.lon, t.n, t.e);
+        p = { lat: ll[0], lon: ll[1] };
+      }
+      latEl.value = p.lat.toFixed(6);
+      lonEl.value = p.lon.toFixed(6);
+    }
+
     latEl.addEventListener("input", render);
     lonEl.addEventListener("input", render);
 
+    // Switching modes restates the same location, it does not move the parcel.
+    Array.prototype.forEach.call(
+      document.querySelectorAll('input[name="mode"]'),
+      function (el) {
+        el.addEventListener("change", function () {
+          if (current) { setFields(current.anchor); }
+          render();
+        });
+      }
+    );
+
     document.getElementById("resetBtn").addEventListener("click", function () {
-      latEl.value = DEFAULT.lat.toFixed(5);
-      lonEl.value = DEFAULT.lon.toFixed(5);
+      setFields(DEFAULT);
       render();
     });
     document.getElementById("kmlBtn").addEventListener("click", function () {
