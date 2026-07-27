@@ -51,11 +51,22 @@ sits essentially on the north–south quarter line of Section 15.
 
 ## Georeferencing — read this before trusting the position
 
-The **shape is exact; the absolute position is an estimate.** No authoritative
-PLSS or parcel service was reachable from the environment this was built in
-(`gis.blm.gov`, Census, ArcGIS, OSM/Nominatim and Overpass were all blocked by
-egress policy), so the North 1/4 corner of Section 15 was reconstructed from
-the PLSS grid using published township geometry:
+The **shape is exact; the position is as good as the corner it hangs off.**
+
+The parcel is anchored on a Point of Beginning read off aerial imagery,
+**41°47'36.65"N 83°34'43.91"W**, which puts the North 1/4 corner of Section 15
+at **41.7935139, −83.5788357**. That inherits however precisely that corner was
+picked — call it a few feet. Good for seeing the lot; not a substitute for the
+surveyed monument. Monroe County GIS or the Michigan Remonumentation records
+would give you the real corner.
+
+### The reconstruction it replaced, and why it missed
+
+No authoritative PLSS or parcel service was reachable from the environment this
+was built in — `gis.blm.gov`, Census, ArcGIS, OSM/Nominatim, Overpass, Photon
+and `earth.google.com` were all refused by egress policy, and Google's geocoder
+needs an API key — so the corner was first reconstructed from published
+township geometry:
 
 **Longitude.** Ida Township (T7S R7E) and Bedford Township (T8S R7E) both
 publish a centroid longitude of 83°35′19″W. Being the same range, that is the
@@ -70,22 +81,27 @@ Lewis Ave, and its North 1/4 corner is the midpoint of that mile.
 centroid fixes the T7S/T8S line at 41.82208. Section 15 sits in the third tier
 of sections from the north, so its north line is 2 miles south of it.
 
-Resulting anchor: **41.79309, −83.57760**
+That gave **41.79309, −83.57760**, which **missed by 371 ft** — 154 ft north and
+337 ft west — landing the parcel about three lots away on golf course ground.
 
-**This anchor is known to be wrong.** Checked against aerial imagery in Google
-Earth it puts the parcel roughly three lots away, on golf course ground — an
-error on the order of a few hundred feet. It confirms the right stretch of Erie
-Road and nothing finer. Correct it before using any coordinate from here.
+Worth recording which half failed. The longitude chain had three agreeing
+sources and looked the stronger of the two; it was off 337 ft. The latitude
+chain rested on a single township centroid and looked weaker; it was off only
+154 ft. Agreement between sources of the same kind — published centroids, all
+derived from the same coarse geometry — was not the independent confirmation it
+appeared to be.
 
 ### Re-anchoring
 
 Everything is parameterised on that one coordinate, so correcting it is a
-one-liner. Get the true corner from Monroe County GIS, the Michigan
-Remonumentation records, a surveyor, or by right-clicking the spot in Google
-Earth or Google Maps, then:
+one-liner. Give either the section corner or the Point of Beginning — the
+parcel's road-side east corner, 7.7 ft away, which is the one you can pick out
+on imagery. Both flags take decimal degrees or the degrees/minutes/seconds that
+Google Earth's *Copy coordinates* produces:
 
 ```sh
-python3 plot_parcel.py --anchor 41.7930500,-83.5779000
+python3 plot_parcel.py --pob "41°47'36.65\"N 83°34'43.91\"W"
+python3 plot_parcel.py --anchor 41.7935139,-83.5788357
 ```
 
 All three output files are rewritten in place against the new corner.

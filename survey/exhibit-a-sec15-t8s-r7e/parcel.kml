@@ -13,21 +13,21 @@
       <Polygon>
         <tessellate>1</tessellate>
         <outerBoundaryIs><LinearRing><coordinates>
-              -83.57762824,41.79308999,0
-              -83.57820756,41.79308980,0
-              -83.57821822,41.79240393,0
-              -83.57762827,41.79240393,0
-              -83.57762824,41.79308999,0
+              -83.57886394,41.79351389,0
+              -83.57944326,41.79351370,0
+              -83.57945393,41.79282783,0
+              -83.57886397,41.79282783,0
+              -83.57886394,41.79351389,0
         </coordinates></LinearRing></outerBoundaryIs>
       </Polygon>
     </Placemark>
     <Placemark>
       <name>Point of Beginning</name>
-      <Point><coordinates>-83.57762824,41.79308999,0</coordinates></Point>
+      <Point><coordinates>-83.57886394,41.79351389,0</coordinates></Point>
     </Placemark>
     <Placemark>
       <name>North 1/4 corner, Section 15 (anchor)</name>
-      <Point><coordinates>-83.57760000,41.79309000,0</coordinates></Point>
+      <Point><coordinates>-83.57883570,41.79351390,0</coordinates></Point>
     </Placemark>
   </Document>
 </kml>

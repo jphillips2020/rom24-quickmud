@@ -425,20 +425,21 @@
   </section>
 
   <section class="caution">
-    <p class="eyebrow">The built-in anchor is known to be wrong</p>
+    <p class="eyebrow">Anchored on imagery, not on a monument</p>
     <p>
       The <b>shape and dimensions are exact</b> &mdash; they come straight out of
-      the deed. The <b>absolute position is not</b>: it hangs entirely off the
-      coordinate of the North 1/4 corner of Section 15, which had to be
-      reconstructed from published PLSS township geometry because no survey or
-      parcel service was reachable.
+      the deed. The <b>position is as good as the corner it hangs off</b>, which is
+      now a Point of Beginning read off aerial imagery:
+      <b>41&deg;47&prime;36.65&Prime;N 83&deg;34&prime;43.91&Prime;W</b>. That inherits
+      however precisely that corner was picked &mdash; call it a few feet &mdash;
+      so it is good for seeing the lot, and still not a substitute for the
+      surveyed monument if this is going anywhere legal.
     </p>
     <p>
-      Checked against aerial imagery, that reconstruction lands the parcel
-      <b>roughly three lots away, on golf course ground</b> &mdash; an error on the
-      order of a few hundred feet. Close enough to confirm the right stretch of
-      Erie Road, not close enough to be the parcel. <b>Correct it below</b> before
-      using any coordinate here for anything.
+      It replaces a PLSS grid reconstruction that <b>missed by 371 ft</b> &mdash;
+      154 ft north and 337 ft west &mdash; landing the parcel about three lots away
+      on golf course ground. Monroe County GIS or the Michigan Remonumentation
+      records would give you the real section corner.
     </p>
   </section>
 
@@ -529,13 +530,13 @@
       <div class="fields">
         <div class="field">
           <label for="lat" id="latLabel">Latitude</label>
-          <input id="lat" type="text" inputmode="decimal" value="41.793090">
+          <input id="lat" type="text" inputmode="decimal" value="41.793514">
         </div>
         <div class="field">
           <label for="lon" id="lonLabel">Longitude</label>
-          <input id="lon" type="text" inputmode="decimal" value="-83.577628">
+          <input id="lon" type="text" inputmode="decimal" value="-83.578864">
         </div>
-        <button type="button" class="reset" id="resetBtn">Reset to estimate</button>
+        <button type="button" class="reset" id="resetBtn">Reset to imagery corner</button>
       </div>
       <p class="status">
         In Google Earth, right-click the spot &rarr; <b>Copy coordinates</b>. In
@@ -622,7 +623,10 @@
   (function () {
     "use strict";
 
-    var DEFAULT = { lat: 41.79309, lon: -83.57760 };
+    // Section corner derived from the P.O.B. read off imagery.
+    var DEFAULT = { lat: 41.7935139, lon: -83.5788357 };
+    // The PLSS reconstruction this replaced, kept to report how far it missed.
+    var RECONSTRUCTED = { lat: 41.79309, lon: -83.57760 };
 
     // Deed calls: [azimuth degrees clockwise from north, distance in feet]
     var TIE   = [269.975, 7.7];
@@ -745,7 +749,7 @@
 
       var isDefault = Math.abs(a.lat - DEFAULT.lat) < 1e-6 && Math.abs(a.lon - DEFAULT.lon) < 1e-6;
       noteEl.textContent = "N 1/4 cor. Sec. 15 — " + a.lat.toFixed(6) + ", " + a.lon.toFixed(6)
-        + (isDefault ? "  (estimated)" : "  (custom anchor)");
+        + (isDefault ? "  (from imagery)" : "  (custom anchor)");
 
       ring.push(ring[0]);
       current = { anchor: a, ring: ring, pob: ring[0] };
@@ -760,20 +764,18 @@
         + "&mlon=" + pob.lon.toFixed(7) + "#map=19/" + pob.lat.toFixed(6)
         + "/" + pob.lon.toFixed(6);
 
-      if (isDefault) {
-        offsetEl.innerHTML = "This is the built-in reconstruction, which is "
-          + "<b>known to be wrong by a few hundred feet</b>. Open it in one of the "
-          + "maps below to see where it landed, then enter the parcel's real "
-          + "road-side east corner above.";
-      } else {
-        var estPob = toLatLon(DEFAULT.lat, DEFAULT.lon, offsets()[0].n, offsets()[0].e);
-        var s = separation({ lat: estPob[0], lon: estPob[1] }, pob);
-        offsetEl.innerHTML = "Your corner is <b>" + Math.round(s.dist)
-          + " ft " + s.compass + "</b> of the built-in estimate &mdash; "
-          + Math.abs(Math.round(s.n)) + " ft " + (s.n >= 0 ? "north" : "south")
-          + ", " + Math.abs(Math.round(s.e)) + " ft " + (s.e >= 0 ? "east" : "west")
-          + ". That is how far off the reconstruction was.";
-      }
+      // Always measure against the superseded reconstruction, so the size of
+      // that miss stays visible whichever corner is loaded.
+      var o = offsets()[0];
+      var oldPob = toLatLon(RECONSTRUCTED.lat, RECONSTRUCTED.lon, o.n, o.e);
+      var s = separation({ lat: oldPob[0], lon: oldPob[1] }, pob);
+      offsetEl.innerHTML = (isDefault
+        ? "Anchored on the corner read off imagery. It sits <b>"
+        : "This corner sits <b>")
+        + Math.round(s.dist) + " ft " + s.compass + "</b> of the original PLSS "
+        + "reconstruction &mdash; " + Math.abs(Math.round(s.n)) + " ft "
+        + (s.n >= 0 ? "north" : "south") + ", " + Math.abs(Math.round(s.e))
+        + " ft " + (s.e >= 0 ? "east" : "west") + ".";
     }
 
     function kml() {

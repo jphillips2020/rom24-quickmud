@@ -14,12 +14,19 @@ Deed (Exhibit "A"):
 
 The parcel's shape, dimensions and area are exact -- they come straight out of
 the deed.  Only its absolute position on the globe depends on the coordinate of
-the North one-quarter corner of Section 15, which is supplied by --anchor.
+the North one-quarter corner of Section 15.
+
+Give that corner with --anchor, or give the Point of Beginning with --pob and
+the corner is derived from it.  The P.O.B. is the parcel's road-side east
+corner, 7.7 ft from the section corner, and it is the one you can actually pick
+out on aerial imagery.  Either flag takes decimal degrees or the degrees /
+minutes / seconds that Google Earth's "Copy coordinates" produces.
 
 Usage:
-    python3 plot_parcel.py                       # use the built-in estimate
-    python3 plot_parcel.py --anchor LAT,LON      # re-anchor on a known corner
-    python3 plot_parcel.py --anchor 41.7931,-83.5776 --outdir out
+    python3 plot_parcel.py                        # built-in anchor
+    python3 plot_parcel.py --pob "41°47'36.65\"N 83°34'43.91\"W"
+    python3 plot_parcel.py --anchor 41.7935139,-83.5788357
+    python3 plot_parcel.py --pob LAT,LON --outdir out
 """
 
 from __future__ import annotations
@@ -28,6 +35,7 @@ import argparse
 import json
 import math
 import os
+import re
 
 # --------------------------------------------------------------------------
 # The deed
@@ -52,11 +60,15 @@ CALL_LABELS = [
     'Due North  250.00\'',
 ]
 
-# Best estimate of the North 1/4 corner of Section 15, T8S R7E, Bedford
-# Township, Monroe County, Michigan.  Derived from PLSS grid reconstruction --
-# see README.md.  Accurate to roughly +/- 0.3 mi; replace with a surveyed or
-# county-GIS coordinate for real-world use.
-DEFAULT_ANCHOR = (41.79309, -83.57760)
+# North 1/4 corner of Section 15, T8S R7E, Bedford Township, Monroe County,
+# Michigan.  Derived from a Point of Beginning read off aerial imagery
+# (41 deg 47' 36.65" N, 83 deg 34' 43.91" W), not from a survey monument -- it
+# inherits however precisely that corner was picked, call it a few feet.  It
+# superseded a PLSS grid reconstruction that missed by 371 ft; see README.md.
+DEFAULT_ANCHOR = (41.7935139, -83.5788357)
+
+# The superseded reconstruction, kept so the size of that miss stays reproducible.
+RECONSTRUCTED_ANCHOR = (41.79309, -83.57760)
 
 FT_PER_M = 1.0 / 0.3048
 
@@ -69,6 +81,41 @@ WGS84_E2 = WGS84_F * (2.0 - WGS84_F)
 # --------------------------------------------------------------------------
 # Geometry
 # --------------------------------------------------------------------------
+
+
+DMS_RE = re.compile(
+    r"""(?P<deg>\d+(?:\.\d+)?)\s*(?:[°d:]|\s)\s*
+        (?:(?P<min>\d+(?:\.\d+)?)\s*(?:['m:]|\s)\s*)?
+        (?:(?P<sec>\d+(?:\.\d+)?)\s*(?:["s]|'')?\s*)?
+        (?P<hemi>[NSEW])""",
+    re.VERBOSE | re.IGNORECASE,
+)
+
+
+def parse_latlon(text: str) -> tuple[float, float]:
+    """Parse a coordinate pair, in decimal degrees or degrees/minutes/seconds.
+
+    Accepts both  41.7935139,-83.5788357  and  41°47'36.65"N 83°34'43.91"W
+    -- the latter is what Google Earth's "Copy coordinates" hands you.
+    """
+    matches = DMS_RE.findall(text)
+    if len(matches) == 2:
+        values = {}
+        for deg, minutes, sec, hemi in matches:
+            value = float(deg) + float(minutes or 0) / 60.0 + float(sec or 0) / 3600.0
+            hemi = hemi.upper()
+            if hemi in "SW":
+                value = -value
+            values["lat" if hemi in "NS" else "lon"] = value
+        if len(values) == 2:
+            return values["lat"], values["lon"]
+        raise ValueError(f"need one N/S and one E/W value: {text!r}")
+
+    parts = [p for p in re.split(r"[,\s]+", text.strip()) if p]
+    if len(parts) == 2:
+        return float(parts[0]), float(parts[1])
+
+    raise ValueError(f"could not parse coordinate: {text!r}")
 
 
 def azimuth(ns: str, deg: int, minutes: int, sec: int, ew: str) -> float:
@@ -314,16 +361,27 @@ def write_svg(path, corners, quarter, area_acres):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument(
+    group = ap.add_mutually_exclusive_group()
+    group.add_argument(
         "--anchor",
-        help="LAT,LON of the North 1/4 corner of Section 15 (WGS84 decimal degrees)",
+        help="LAT,LON of the North 1/4 corner of Section 15",
+    )
+    group.add_argument(
+        "--pob",
+        help="LAT,LON of the Point of Beginning -- the parcel's road-side east "
+        "corner, which is what you can actually pick out on imagery. The "
+        "section corner is derived from it.",
     )
     ap.add_argument("--outdir", default=os.path.dirname(os.path.abspath(__file__)))
     args = ap.parse_args()
 
     if args.anchor:
-        lat, lon = (float(v) for v in args.anchor.split(","))
-        anchor = (lat, lon)
+        anchor = parse_latlon(args.anchor)
+    elif args.pob:
+        # The P.O.B. lies 7.7 ft from the section corner on a bearing of
+        # S 89 deg 58' 30" W, so step back along the tie to reach the corner.
+        dn, de = leg(TIE)
+        anchor = to_latlon(parse_latlon(args.pob), -dn, -de)
     else:
         anchor = DEFAULT_ANCHOR
 
